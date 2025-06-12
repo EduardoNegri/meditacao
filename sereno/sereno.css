@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+}
+
+:root {
+    --roxo-principal: #5d22b3;
+    --roxo-claro: #f0e4fc;
+    --roxo-texto-escuro: #401c74;
+    --branco: #ffffff;
+    --cinza-texto: #6c757d;
+    --roxo-botão: #a864fc;
+    --roxo-finaldegrade:#340c74;
+}
+body {
+    font-family: 'Poppins', sans-serif; 
+}
+html {
+    scroll-behavior: smooth;
+}
+.container {
+    max-width: 1200px;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+#inicio .container {
+    margin-left: 80px;
+    margin-right: 0px;
+}
+.hero-content {
+    justify-content: flex-start;
+}
+
+header {
+    background-color: transparent; 
+    padding: 1px 0;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--roxo-texto-escuro);
+}
+.logo img {
+    height: 80px;
+}
+
+.ul {
+    display: flex;
+    gap: 35px;
+}
+
+.ul li a {
+    color: var(--branco);
+    font-weight: 500;
+    font-size: 14px;
+    transition: color 0.3s;
+    padding-bottom: 5px;
+    border-bottom: 2px solid transparent;
+}
+
+.ul li a:hover {
+    color: var(--roxo-claro);
+    border-bottom: 2px solid var(--roxo-claro);
+}
+
+#inicio {
+    background:
+        linear-gradient(-106deg, transparent 49.9%, var(--roxo-claro) 50%),
+        url(img/Padrão-Linhas.png) right / 800px 700px no-repeat,
+        linear-gradient(to bottom, var(--roxo-principal), var(--roxo-finaldegrade));
+    background-attachment: fixed;
+    color: var(--roxo-texto-escuro);
+
+    padding-top: 100px;
+    padding-bottom: 50px;
+    min-height: 100vh; 
+    display: flex; 
+    align-items: center;
+}
+
+
+main {
+  width: 100%;
+} 
+.hero-content {
+
+display: flex;
+align-items: center;
+justify-content: flex-start;
+gap: 40px;
+min-height: calc(100vh - 85px);
+padding-bottom: 50px;
+}
+.hero-left {
+flex-basis: 50%;
+}
+.hero-left h1 {
+
+font-size: 46px;
+line-height: 1.2;
+margin-bottom: 15px;
+}
+.hero-left p {
+font-size: 20px;
+color: #5b3a7a;
+margin-bottom: 30px;
+max-width: 750px;
+}
+.botao-roxo {
+    display: inline-block;
+    padding: 8px 40px;
+    background-color: var(--roxo-botão);
+    color: white;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.botao-roxo:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.disponivel-em {
+    margin-top: 40px;
+}
+.disponivel-texto {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--cinza-texto);
+    margin-bottom: 0px;
+}
+.botoes-container {
+    display: flex;
+    align-items: center; 
+    gap: 15px;          
+}
+.botoes-loja1, .botoes-loja2 {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.botoes-loja1 img, .botoes-loja2 img { 
+    height: 60px; 
+    transition: transform 0.3s; 
+}
+.botoes-loja1 img:hover, .botoes-loja2 img:hover {
+    transform: scale(1.05);
+}
+
+
+
+
+#sobre {
+    background-color: var(--branco); 
+    color: #333; 
+    padding: 100px 0;
+    min-height: 50vh; 
+}
+#sobre h2 {
+    font-size: 36px;
+    color: var(--roxo-principal);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#sobre p {
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
