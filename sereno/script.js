@@ -1,0 +1,217 @@
+const wrapper = document.querySelector(".wrapper");
+const carousel = document.querySelector(".carousel");
+const arrowBtns = document.querySelectorAll(".wrapper button");
+const firstCardWith = carousel.querySelector(".card").offsetWidth;
+
+// Pega os cards dentro do carrossel
+const carouselChildrens = [...carousel.children];
+
+// Variáveis de controle
+let isDragging = false, startX, startScrollLeft, timeOutId;
+let cardPerView = Math.round(carousel.offsetWidth / firstCardWith);
+let currentActiveIndex = cardPerView;
+
+const updateIndicators = () => {
+    // Remove classe ativa de todos
+    const indicators_actives = document.querySelectorAll(".indicador.active");
+    indicators_actives.forEach(indicator => {
+        indicator.classList.remove("active");
+    });
+
+    // Índice relativo (descontando os duplicados no início)
+    let relativeIndex = currentActiveIndex - cardPerView;
+
+    // Ativa o indicador correto
+    const indicators = document.querySelectorAll(".indicador");
+
+    if (relativeIndex <= 3){
+        indicators[0].classList.add("active")
+    } else {
+        indicators[1].classList.add("active")
+    }
+};
+
+// Atualiza o card central
+const updateActiveCardByScroll = () => {
+    // Pega posição e tamanho do carrossel
+    const carouselRect = carousel.getBoundingClientRect(); 
+    // Calcula o ponto central do carrossel (eixo X)
+    const centerX = carouselRect.left + carousel.offsetWidth / 2; 
+    // Card mais próximo do centro
+    let closestCard = null;
+    // Distância mais próxima do centro até agora
+    let closestDistance = Infinity; 
+    // Pega os cards dentro do carrossel
+    let allCards = carousel.querySelectorAll(".card");
+
+    // Percorre todos os cards dentro do carrossel
+    allCards.forEach((card, index) => {
+        // Pega a posição e o tamanho do card
+        const cardRect = card.getBoundingClientRect();
+        // Calcula o centro do card
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        // Distância entre o centro do carrossel e o card
+        const distance = Math.abs(centerX - cardCenter);
+
+         // Verifica se o card atual está mais próximo do centro da tela que o último
+        if (distance < closestDistance) {
+            // Atualiza o card mais próximo do centro
+            closestDistance = distance;
+            closestCard = card;
+            // Salva o índice central
+            currentActiveIndex = index; 
+        }
+    });
+
+    // Remove a classe "active" de todos os cards atualmente ativos
+    allCards.forEach(card => card.classList.remove("active"));
+    if (window.innerWidth >= 1180 && closestCard) {
+        closestCard.classList.add("active");
+    }
+
+    // Só aplica o "ativo" se a tela for grande o suficiente (>= 1180px)
+    if (window.innerWidth >= 1180) {
+        if (closestCard) {
+            // Adiciona a classe "active" ao card mais centralizado
+            closestCard.classList.add("active");
+        }
+    }
+};
+
+// Indicadores clicáveis
+document.querySelectorAll(".indicador").forEach((indicator, index) => {
+    indicator.addEventListener("click", () => {
+        let targetIndex;
+
+        // Remove classe "active" de todos os indicadores antes de adicionar no correto
+        document.querySelectorAll(".indicador").forEach(i => i.classList.remove("active"));
+
+        // Adiciona classe "active" ao indicador clicado
+        indicator.classList.add("active");
+        
+        if (index === 0) {
+            // Indicador 0 → primeiro card real
+            targetIndex = cardPerView;
+        } else {
+            // Indicador 1 → último card real
+            targetIndex = carouselChildrens.length - 1 + cardPerView
+        }
+
+        // Move o carrossel até o card desejado
+        carousel.scrollLeft = targetIndex * firstCardWith;
+
+        // Atualiza o card ativo com base na nova posição
+        updateActiveCardByScroll();
+    });
+});
+
+// Duplicação dos cards no início e fim para criar um efeito de carrossel infinito
+carouselChildrens.slice(-cardPerView).reverse().forEach(card => {
+    // Insere os últimos `cardPerView` cards no início do carrossel, em ordem reversa
+    carousel.insertAdjacentHTML("afterbegin", card.outerHTML);
+});
+
+carouselChildrens.slice(0, cardPerView).forEach(card => {
+    // Insere os primeiros `cardPerView` cards no final do carrossel
+    carousel.insertAdjacentHTML("beforeend", card.outerHTML);
+});
+
+// Ações dos botões do carrossel
+arrowBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        // Verifica qual botão foi clicado para mover o carrossel
+        carousel.scrollLeft += btn.id === "left" ? -firstCardWith : firstCardWith;
+        // Atualiza o card central
+        updateActiveCardByScroll();
+        // Atualiza o indicador
+        updateIndicators();
+    })
+})
+
+// Quando o mouse tocar no carrossel
+const dragStart = (e) => {
+    isDragging = true;
+    carousel.classList.add("dragging");
+    // Armazena a posição inicial do mouse
+    startX = e.pageX;
+    // Armazena a posição inicial do scroll
+    startScrollLeft = carousel.scrollLeft;
+}
+
+// Quando o mouse estiver sendo arrastado
+const dragging = (e) => {
+    if(!isDragging) return;
+    // Move o carrossel com o mouse
+    carousel.scrollLeft = startScrollLeft - (e.pageX - startX);
+}
+
+// Quando o mouse deixar de ser arrastado
+const dragStop = () => {
+    isDragging = false;
+    carousel.classList.remove("dragging");
+    // Atualiza o card central
+    updateActiveCardByScroll();
+    // Atualiza o indicador
+    updateIndicators();
+}
+
+// Move o carrossel automaticamente
+const autoPlay = () => {
+    // Atualiza o card central
+    updateActiveCardByScroll();
+    // Atualiza o indicador
+    updateIndicators();
+    // Evita que o setTimeout seja executado mais de uma vez
+    timeOutId = setTimeout(() => {
+        // Verifica o tamanho da tela e move o carrossel
+        if (window.innerWidth < 1180 && window.innerWidth >= 865) {
+            carousel.scrollLeft += (firstCardWith + 24);
+        }
+        // Move o carrossel
+        carousel.scrollLeft += firstCardWith;
+    }, 3000);
+}
+
+// Move o carrossel infinitamente
+const infiniteScroll = () => {
+    // Variáveis que armazenam o valor inicial e final do scroll
+    const atStart = carousel.scrollLeft === 0;
+    const atEnd = Math.ceil(carousel.scrollLeft) === carousel.scrollWidth - carousel.offsetWidth;
+    // Verifica se uma das variáveis existe
+    if (atStart || atEnd) {
+        carousel.classList.add("no-transition");
+        // Verifica se o scroll chegou ao inicio
+        if (atStart) {
+            carousel.scrollLeft = carousel.scrollWidth - (2 * carousel.offsetWidth);
+        } 
+        // Faz o carrossel voltar ao inicio
+        else {
+            carousel.scrollLeft = carousel.offsetWidth;
+        }
+        
+        carousel.classList.remove("no-transition");
+        return;
+    }
+    
+    // Limpa o setTimeout
+    clearTimeout(timeOutId);
+    // Verifica se o mouse não está sobre o carrossel
+    if (!wrapper.matches(":hover")) autoPlay();
+    // Atualiza o card central
+    updateActiveCardByScroll();
+    // Atualiza o indicador
+    updateIndicators();
+};
+
+// Inicialização das funções
+autoPlay();
+updateActiveCardByScroll();
+updateIndicators();
+
+// Eventos do carrossel
+carousel.addEventListener("mousedown", dragStart);
+carousel.addEventListener("mousemove", dragging);
+document.addEventListener("mouseup", dragStop);
+carousel.addEventListener("scroll", infiniteScroll);
+wrapper.addEventListener("mouseenter", () => clearTimeout(timeOutId));
+wrapper.addEventListener("mouseleave", autoPlay);

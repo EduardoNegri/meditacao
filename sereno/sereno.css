@@ -7,59 +7,78 @@
     box-sizing: border-box;
     text-decoration: none;
     list-style: none;
+    outline: transparent;
+    border: none;
 }
 
 :root {
     --roxo-principal: #5d22b3;
-    --roxo-claro: #f0e4fc;
+    --roxo-claro: #EEE0FF;
     --roxo-texto-escuro: #401c74;
     --branco: #ffffff;
     --cinza-texto: #6c757d;
     --roxo-botão: #a864fc;
+    --roxo-estrela: #7C3BE2;
     --roxo-finaldegrade:#340c74;
 }
 body {
     font-family: 'Poppins', sans-serif; 
+    color: var(--roxo-texto-escuro);
+    background-color: var(--roxo-claro);
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
+
 html {
     scroll-behavior: smooth;
 }
+
 .container {
-    max-width: 1200px;
+    width: 100%;
     padding: 0 15px;
-    margin: 0 auto;
+    /* margin: 0 auto; */
 }
 
-#inicio .container {
-    margin-left: 80px;
-    margin-right: 0px;
-}
-.hero-content {
-    justify-content: flex-start;
-}
+
+/* Navbar - Barra de Navegação */
 
 header {
     background-color: transparent; 
     padding: 1px 0;
     position: fixed;
-    width: 100%;
-    z-index: 10;
+    width: 100vw;
+    z-index: 10000;
+    top: 0;
+}
+
+.container.header {
+    max-width: 95vw;
 }
 
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .logo a {
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--roxo-texto-escuro);
 }
+
+.logo-texto {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--roxo-texto-escuro);
+}
+
 .logo img {
     height: 80px;
 }
@@ -75,18 +94,31 @@ nav {
     font-size: 14px;
     transition: color 0.3s;
     padding-bottom: 5px;
-    border-bottom: 2px solid transparent;
+    border-bottom: 4px solid transparent;
+    transition: 0.3s ease-in-out;
+    width: 0;
+}
+
+@keyframes border {
+  100% {
+    width: 100%;
+    border-bottom: 4px solid var(--roxo-claro);
+  }
 }
 
 .ul li a:hover {
     color: var(--roxo-claro);
-    border-bottom: 2px solid var(--roxo-claro);
+    animation: border 0.3s ease-in-out;
+    animation-fill-mode: forwards;
+    transform-origin: left;
 }
+
+/* Seção - Início */
 
 #inicio {
     background:
         linear-gradient(-106deg, transparent 49.9%, var(--roxo-claro) 50%),
-        url(img/Padrão-Linhas.png) right / 1000px 1000px no-repeat,
+        url(img/Padrão-Linhas.png) right / 100% 100% no-repeat,
         linear-gradient(to bottom, var(--roxo-principal), var(--roxo-finaldegrade));
     background-attachment: fixed;
     color: var(--roxo-texto-escuro);
@@ -95,59 +127,75 @@ nav {
     padding-bottom: 50px;
     min-height: 100vh; 
     display: flex; 
+    justify-content: center;
     align-items: center;
+    width: 100vw;
 }
 
+
+#inicio .container {
+    max-width: 1200px;
+}
 
 main {
   width: 100%;
 } 
+
 .hero-content {
-
-display: flex;
-align-items: center;
-justify-content: flex-start;
-gap: 40px;
-min-height: calc(100vh - 85px);
-padding-bottom: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 40px;
+  min-height: calc(100vh - 85px);
+  padding-bottom: 50px;
 }
+
+
+/* Hero Left */
+
 .hero-left {
-flex-basis: 50%;
+  flex-basis: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
-.hero-left h1 {
 
-font-size: 46px;
-line-height: 1.2;
-margin-bottom: 15px;
+.hero-left h1 {
+  font-size: 46px;
+  line-height: 1.2;
+  margin-bottom: 15px;
 }
+
 .hero-left p {
-font-size: 20px;
-color: #5b3a7a;
-margin-bottom: 30px;
-max-width: 750px;
+  font-size: 1.125rem;
+  color: #795EA4;
+  margin-bottom: 30px;
+  max-width: 350px;
 }
+
 .botao-roxo {
-    display: inline-block;
-    padding: 8px 40px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 8px 20px;
     background-color: var(--roxo-botão);
     color: white;
     border-radius: 10px;
     font-weight: 500;
     font-size: 20px;
+    width: 15em;
+    cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 .botao-roxo:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
-.disponivel-em {
-    margin-top: 40px;
-}
+
 .disponivel-texto {
     font-size: 14px;
     font-weight: 500;
     color: var(--cinza-texto);
-    margin-bottom: 0px;
 }
 .botoes-container {
     display: flex;
@@ -160,14 +208,49 @@ max-width: 750px;
     gap: 15px;
 }
 .botoes-loja1 img, .botoes-loja2 img { 
-    height: 60px; 
+    height: 5rem; 
     transition: transform 0.3s; 
 }
 .botoes-loja1 img:hover, .botoes-loja2 img:hover {
     transform: scale(1.05);
 }
 
-/* segunda pagina css  */
+/* Hero Right */
+
+.hero-right {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.hero-right .imagens {
+  display: flex;
+  position: absolute;
+  overflow: hidden;
+  height: 38em;
+  transform: translateX(-28%);
+}
+
+.hero-right img {
+  object-fit: contain;
+  object-position: center;
+  height: auto;
+  width: 28em;
+}
+
+.hero-right img:first-child {
+  z-index: 1;
+  /* Virar a imagem horizontalmente */
+  transform: scaleX(-1) translate(-13em, -3em);
+}
+
+.hero-right img:last-child {
+  z-index: 0;
+  /* Virar a imagem horizontalmente */
+  transform: translate(-3em, 3em);
+}
+
+/* Seção - Sobre */
 
 #sobre {
   background-color: var(--roxo-claro);
@@ -194,38 +277,47 @@ max-width: 750px;
   min-width: 300px;
   height: 500px;
 }
+
 .sobre-imagem .celular {
   margin-top: 60px;
   position: absolute;
   height: 100%;
   max-height: 100%;
 }
+
 .sobre-imagem .fundo {
   margin-top: 60px;
   left: 170px;
   top: 0;
   z-index: 1;
 }
+
 .sobre-imagem .frente {
   left: 0;
   top: 0;
   z-index: 2;
   transform: rotate(-12deg) scale(0.95);
 }
+
 .sobre-texto h2 {
   font-size: 3rem;
   font-weight: 800;
   color: var(--roxo-texto-escuro);
   margin-bottom: 1.5rem;
 }
+
 .sobre-texto p {
   font-size: 1.125rem;
-  line-height: 1.75;
-  color: var(--roxo-texto-escuro);
+  color: #553E7A;
+  max-width: 500px;
 }
+
 .sobre-texto p:not(:last-child) {
   margin-bottom: 1rem;
 }
+
+/* Banner - Dados do Sereno */
+
 .sobre-banner {
   position: relative;
   z-index: 3;
@@ -253,4 +345,222 @@ max-width: 750px;
   font-size: 1.125rem;
   color: #ffffff;
   margin-top: 0.5rem;
+}
+
+/* Seção - Depoimentos */
+
+#depoimentos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0 35px;
+}
+
+#depoimentos .header {
+    text-align: center;
+}
+
+#depoimentos .header h1 {
+    font-size: 3rem;
+    font-weight: bolder;
+}
+
+#depoimentos .header p {
+    font-size: 1.2rem;
+    color: #795EA4;
+    font-weight: 500;
+}
+
+.depoimentos-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 95%;
+}
+
+/* Wrapper */
+
+/* Container do carrossel */
+.wrapper {
+    max-width: 1280px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 24em;
+    margin-top: 4rem;
+    margin-inline: auto;
+}
+
+.wrapper button {
+    height: 50px;
+    width: 50px;
+    color: #340c74;
+    background-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.wrapper button:first-child {
+    left: -48px;
+}
+.wrapper button:last-child {
+    right: -48px;
+}
+
+/* Carrossel */
+
+/* Container do carrossel com os cards */
+.wrapper .carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% / 3) - 32px);
+    border-radius: 8px;
+    gap: 32px;
+    overflow-x: auto; 
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: 0;
+    height: 100%;
+    align-items: center;
+}
+
+.carousel.no-transition {
+    scroll-behavior: auto;
+}
+
+.carousel.dragging {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+}
+
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Card */
+
+.carousel .card {
+    scroll-snap-align: start;
+    background-color: white;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    cursor: grab;
+    padding: 2em;
+    height: 270px;
+    transition: 0.4s ease-in-out;
+    border: 1px solid transparent;
+}
+
+.carousel .card:hover,
+.carousel .card:focus,
+.carousel.dragging .card:hover,
+.carousel.dragging .card:focus {
+    border: 1px solid var(--roxo-claro);
+}
+
+.carousel.dragging .card {
+    cursor: grab;
+    user-select: none;
+}
+
+/* Card Central Ativo */
+.card.active {
+    transition: 0.4s ease-in-out;
+    transition-delay: 0.3s;
+    scale: 1.05;
+    height: 320px;
+}
+
+.card .author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card img {
+    width: 28px;
+    height: 28px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.card p {
+    width: 100%;
+    max-height: 72px;
+    text-overflow: clip;
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 600;
+    color: var(--roxo-texto-claro);
+}
+
+.card h2 {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* Estrelas */
+.avaliation {
+    color: var(--roxo-estrela);
+}
+
+/* Indicadores (Controles de navegação) - Carrossel */
+
+.indicadores {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.indicador {
+    background: #D7B7FF;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.4s ease-in-out;
+}
+
+.indicador.active {
+    background: var(--roxo-estrela);
+    width: 32px;
+    height: 10px;
+    border-radius: 10px;
+}
+
+/* Responsividade */
+
+@media screen and (max-width: 1180px) {
+    .wrapper {
+        max-width: 100%;
+        padding: 0;
+    }
+    .wrapper .carousel {
+        grid-auto-columns: calc((100% / 2) - 12px);
+        gap: 24px;
+    }
+}
+
+@media screen and (max-width: 865px) {
+    .wrapper .carousel {
+        grid-auto-columns: 100%;
+    }
+    .wrapper button {
+        display: none;
+    }
 }
