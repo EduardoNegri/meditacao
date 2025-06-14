@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="sereno.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/sereno/img/apple-touch-icon.png">
     <link rel="shortcut icon" href="/sereno/img/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <title>Sereno</title>
 </head>
 <body>
@@ -197,6 +199,41 @@
 </main>
 
 <script src="script.js"></script>
+<!-- terceira pagina html -->
+ <!-- Seção de inscrição - Sereno -->
+<section class="newsletter-section" aria-labelledby="newsletter-title">
+  <div class="container">
+    <div class="main-content">
+      <form class="form-box" id="signup-form" novalidate>
+        <label for="name" class="inline-label">Nome</label>
+        <input type="text" id="name" name="name" placeholder="Nome" aria-describedby="name-error" />
+
+        <label for="email" class="inline-label">Email</label>
+        <input type="email" id="email" name="email" placeholder="Email" aria-describedby="email-error" />
+
+        <fieldset class="radio-group" aria-describedby="meditate-error">
+          <legend>Você já medita?</legend>
+          <label><input type="radio" name="meditates" value="sim" required /> Sim</label>
+          <label><input type="radio" name="meditates" value="nao" /> Não</label>
+          <p id="meditate-error" class="error-message">Por favor, selecione uma opção.</p>
+        </fieldset>
+
+        <button type="submit" class="btn-submit">
+          Quero receber 
+          <span class="material-icons" aria-hidden="true">arrow_forward</span>
+        </button>
+
+        <p id="form-message" role="alert" aria-live="assertive"></p>
+      </form>
+
+      <section class="content-text">
+        <h1 id="newsletter-title">Quer ficar por dentro das novidades?</h1>
+        <p>Preencha as informações ao lado para receber atualizações do nosso App por e-mail!</p>
+        <script src="script.js"></script>
+      </section>
+    </div>
+  </div>
+</section>
 
 </body>
 </html>

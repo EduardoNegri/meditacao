@@ -215,3 +215,71 @@ document.addEventListener("mouseup", dragStop);
 carousel.addEventListener("scroll", infiniteScroll);
 wrapper.addEventListener("mouseenter", () => clearTimeout(timeOutId));
 wrapper.addEventListener("mouseleave", autoPlay);
+
+// Novidades
+
+// Validação do formulário de novidades
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('signup-form');
+  if (!form) return; // segurança para não tentar validar se o form não existe
+
+  const nameInput = form.elements['name'];
+  const emailInput = form.elements['email'];
+  const meditateInputs = form.elements['meditates'];
+  const formMessage = document.getElementById('form-message');
+  const meditateError = document.getElementById('meditate-error');
+
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email.trim());
+  }
+
+  function isMeditationSelected() {
+    return [...meditateInputs].some(input => input.checked);
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    formMessage.textContent = '';
+    let errors = [];
+
+    // Nome
+    if (!nameInput.value.trim() || nameInput.value.trim().length < 2) {
+      errors.push('Por favor, insira um nome válido com pelo menos 2 caracteres.');
+      nameInput.setAttribute('aria-invalid', 'true');
+    } else {
+      nameInput.removeAttribute('aria-invalid');
+    }
+
+    // Email
+    if (!emailInput.value.trim() || !validateEmail(emailInput.value)) {
+      errors.push('Por favor, insira um email válido.');
+      emailInput.setAttribute('aria-invalid', 'true');
+    } else {
+      emailInput.removeAttribute('aria-invalid');
+    }
+
+    // Meditação
+    if (!isMeditationSelected()) {
+      meditateError.style.display = 'block';
+      errors.push('Por favor, selecione se você já medita.');
+    } else {
+      meditateError.style.display = 'none';
+    }
+
+    // Mostrar erros
+    if (errors.length > 0) {
+      formMessage.style.color = '#ffcccc';
+      formMessage.textContent = errors.join(' ');
+      return;
+    }
+
+    // Sucesso
+    formMessage.style.color = '#b8ffd0';
+    formMessage.textContent = 'Cadastro realizado com sucesso!';
+    console.log('Nome:', nameInput.value.trim());
+    console.log('Email:', emailInput.value.trim());
+    form.reset();
+    meditateError.style.display = 'none';
+  });
+});
