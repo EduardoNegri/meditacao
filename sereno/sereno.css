@@ -316,6 +316,63 @@ main {
   margin-bottom: 1rem;
 }
 
+/* Seção - Recursos */
+
+#recursos {
+    background-color: var(--roxo-estrela); 
+    color: #ffffff; 
+    padding: 75px 0;
+    min-height: 50vh; 
+}
+#recursos h2 {
+    font-size: 36px;
+    color: var(--branco);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#recursos p {
+    font-size: 18px;
+    line-height: 1.2;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.card-recurso {
+    background-color: var(--roxo-botão); 
+    color: white;
+    padding: 30px 20px;
+    border-radius: 20px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.recursos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; 
+  gap: 20px; 
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.card-recurso:hover {
+    transform: scale(1.05); 
+}
+
+.card-recurso img {
+    width: 40px;
+    margin-bottom: 15px;
+}
+
+.card-recurso p {
+    font-weight: bold;
+    font-size: 16px;
+}
+
 /* Banner - Dados do Sereno */
 
 .sobre-banner {
