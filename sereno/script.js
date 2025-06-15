@@ -269,13 +269,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Mostrar erros
     if (errors.length > 0) {
-      formMessage.style.color = '#ffcccc';
+      formMessage.style.color = '#a46cff';
       formMessage.textContent = errors.join(' ');
       return;
     }
 
     // Sucesso
-    formMessage.style.color = '#b8ffd0';
+    formMessage.style.color = '##a46cff';
     formMessage.textContent = 'Cadastro realizado com sucesso!';
     console.log('Nome:', nameInput.value.trim());
     console.log('Email:', emailInput.value.trim());
