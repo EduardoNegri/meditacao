@@ -719,6 +719,32 @@ main {
   max-width: 370px;
    color: #fff;
 }
+.newsletter-section {
+  position: relative;
+  background: #7C3BE2;
+  padding: 64px 16px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.bg-decorativa {
+  position: absolute;
+  top: -80px; 
+  left: 0;
+  width: 100%;
+  height: auto;
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.newsletter-section .container,
+.newsletter-section .main-content,
+.form-box,
+.content-text {
+  position: relative;
+  z-index: 1;
+}
 
 
 /* Responsividade página inicial 865px  */
@@ -842,4 +868,51 @@ min-height: auto;
     .wrapper button {
         display: none;
     }
+  }
+
+/* Responsividade novidades*/
+@media (max-width: 865px) {
+  .menu-rodape {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+
+  .linha-divisoria {
+    margin-top: 40px;
+    margin-bottom: 10px;
+  }
+
+  .imagem-fundo img {
+    transform: rotate(90deg);
+    width: auto;
+    height: 250px;
+    position: absolute;
+    right: -50px;
+    top: 20px;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .hero-left h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .hero-left p {
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  .botoes-loja1,
+  .botoes-loja2 {
+    justify-content: center;
+  }
+
+  .botoes-loja1 img,
+  .botoes-loja2 img {
+    height: 3.5rem;
+  }
 }
