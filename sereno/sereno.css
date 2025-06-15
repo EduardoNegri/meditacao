@@ -608,7 +608,7 @@ main {
 
 .newsletter-section .container {
   width: 100%;
-  /* max-width removido para expandir totalmente */
+  
 }
 
 .newsletter-section .main-content {
@@ -618,7 +618,7 @@ main {
   align-items: center;
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto; /* mantemos o conteúdo centralizado */
+  margin: 0 auto; 
 }
 
 
