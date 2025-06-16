@@ -1,30 +1,33 @@
+// Carrossel - Seção de Depoimentos
+
+// Elementos do carrossel
 const wrapper = document.querySelector(".wrapper");
 const carousel = document.querySelector(".carousel");
 const arrowBtns = document.querySelectorAll(".wrapper button");
 const firstCardWith = carousel.querySelector(".card").offsetWidth;
-
-// Pega os cards dentro do carrossel
-const carouselChildrens = [...carousel.children];
+const indicators = document.querySelectorAll(".indicador");
 
 // Variáveis de controle
 let isDragging = false, startX, startScrollLeft, timeOutId;
+// Quantidade de cards que serão exibidos por vez (com base na largura)
 let cardPerView = Math.round(carousel.offsetWidth / firstCardWith);
+// Indice do card central (com base na quantidade de cards exibidos)
 let currentActiveIndex = cardPerView;
+// Cards do carrossel
+const carouselChildrens = [...carousel.children];
 
+// Atualiza os indicadores
 const updateIndicators = () => {
-    // Remove classe ativa de todos
     const indicators_actives = document.querySelectorAll(".indicador.active");
+
+    // Remove a classe "active" de todos os indicadores
     indicators_actives.forEach(indicator => {
         indicator.classList.remove("active");
     });
-
-    // Índice relativo (descontando os duplicados no início)
+    // Verifica qual indicador deve ser ativo (baseado no card central atual)
     let relativeIndex = currentActiveIndex - cardPerView;
-
-    // Ativa o indicador correto
-    const indicators = document.querySelectorAll(".indicador");
-
-    if (relativeIndex <= 3){
+    // Verifica qual indicador deve ser ativo de acordo com o card central
+    if (relativeIndex > 0 && relativeIndex <= 3) {
         indicators[0].classList.add("active")
     } else {
         indicators[1].classList.add("active")
@@ -65,70 +68,61 @@ const updateActiveCardByScroll = () => {
 
     // Remove a classe "active" de todos os cards atualmente ativos
     allCards.forEach(card => card.classList.remove("active"));
-    if (window.innerWidth >= 1180 && closestCard) {
-        closestCard.classList.add("active");
-    }
 
-    // Só aplica o "ativo" se a tela for grande o suficiente (>= 1180px)
-    if (window.innerWidth >= 1180) {
-        if (closestCard) {
-            // Adiciona a classe "active" ao card mais centralizado
-            closestCard.classList.add("active");
-        }
-    }
+    // Verifica o tamanho da tela e adiciona a classe "active" ao card central
+    if (window.innerWidth >= 1180 && closestCard) closestCard.classList.add("active");
 };
 
-// Indicadores clicáveis
-document.querySelectorAll(".indicador").forEach((indicator, index) => {
+// Percorre todos os indicadores
+indicators.forEach((indicator, index) => {
+    const indicators_actives = document.querySelectorAll(".indicador.active");
+    
+    // Evento de clique para cada indicador
     indicator.addEventListener("click", () => {
+        // Armazena qual indicador foi clicado
         let targetIndex;
-
         // Remove classe "active" de todos os indicadores antes de adicionar no correto
-        document.querySelectorAll(".indicador").forEach(i => i.classList.remove("active"));
-
+        indicators_actives.forEach(i => i.classList.remove("active"));
         // Adiciona classe "active" ao indicador clicado
         indicator.classList.add("active");
-        
+        // Verifica qual indicador foi clicado
         if (index === 0) {
-            // Indicador 0 → primeiro card real
+            // O primeiro indicador → primeiro card real
             targetIndex = cardPerView;
         } else {
-            // Indicador 1 → último card real
+            // O segundo indicador → último card real
             targetIndex = carouselChildrens.length - 1 + cardPerView
         }
-
         // Move o carrossel até o card desejado
         carousel.scrollLeft = targetIndex * firstCardWith;
-
         // Atualiza o card ativo com base na nova posição
         updateActiveCardByScroll();
     });
 });
 
-// Duplicação dos cards no início e fim para criar um efeito de carrossel infinito
+// Pega os últimos cards que são exibidos e inverte a ordem
 carouselChildrens.slice(-cardPerView).reverse().forEach(card => {
-    // Insere os últimos `cardPerView` cards no início do carrossel, em ordem reversa
+    // Insere os últimos cards no início do carrossel
     carousel.insertAdjacentHTML("afterbegin", card.outerHTML);
 });
-
+// Pega os primeiros cards que são exibidos
 carouselChildrens.slice(0, cardPerView).forEach(card => {
-    // Insere os primeiros `cardPerView` cards no final do carrossel
+    // Insere os primeiros cards no final do carrossel
     carousel.insertAdjacentHTML("beforeend", card.outerHTML);
 });
 
-// Ações dos botões do carrossel
+// Ação dos botões do carrossel
 arrowBtns.forEach(btn => {
+    // Eventos de clique dos botões
     btn.addEventListener("click", () => {
         // Verifica qual botão foi clicado para mover o carrossel
         carousel.scrollLeft += btn.id === "left" ? -firstCardWith : firstCardWith;
-        // Atualiza o card central
         updateActiveCardByScroll();
-        // Atualiza o indicador
         updateIndicators();
     })
 })
 
-// Quando o mouse tocar no carrossel
+// Evento de tocar no carrossel
 const dragStart = (e) => {
     isDragging = true;
     carousel.classList.add("dragging");
@@ -138,33 +132,32 @@ const dragStart = (e) => {
     startScrollLeft = carousel.scrollLeft;
 }
 
-// Quando o mouse estiver sendo arrastado
+// Evento de arrastar o mouse
 const dragging = (e) => {
+    // Verifica se o mouse estiver sendo arrastado
     if(!isDragging) return;
     // Move o carrossel com o mouse
     carousel.scrollLeft = startScrollLeft - (e.pageX - startX);
 }
 
-// Quando o mouse deixar de ser arrastado
+// Evento de parar de arrastar o mouse
 const dragStop = () => {
     isDragging = false;
     carousel.classList.remove("dragging");
-    // Atualiza o card central
     updateActiveCardByScroll();
-    // Atualiza o indicador
     updateIndicators();
 }
 
-// Move o carrossel automaticamente
+// Automatiza o carrossel
 const autoPlay = () => {
-    // Atualiza o card central
     updateActiveCardByScroll();
-    // Atualiza o indicador
     updateIndicators();
+    
     // Evita que o setTimeout seja executado mais de uma vez
     timeOutId = setTimeout(() => {
         // Verifica o tamanho da tela e move o carrossel
         if (window.innerWidth < 1180 && window.innerWidth >= 865) {
+            // Move o carrossel baseado na largura do card e no espaço entre eles
             carousel.scrollLeft += (firstCardWith + 24);
         }
         // Move o carrossel
@@ -172,20 +165,21 @@ const autoPlay = () => {
     }, 3000);
 }
 
-// Move o carrossel infinitamente
+// Efeito de Loop contínuo
 const infiniteScroll = () => {
     // Variáveis que armazenam o valor inicial e final do scroll
     const atStart = carousel.scrollLeft === 0;
     const atEnd = Math.ceil(carousel.scrollLeft) === carousel.scrollWidth - carousel.offsetWidth;
+
     // Verifica se uma das variáveis existe
     if (atStart || atEnd) {
         carousel.classList.add("no-transition");
         // Verifica se o scroll chegou ao inicio
         if (atStart) {
+            // Faz o carrossel voltar ao fim
             carousel.scrollLeft = carousel.scrollWidth - (2 * carousel.offsetWidth);
-        } 
-        // Faz o carrossel voltar ao inicio
-        else {
+        } else {
+            // Faz o carrossel voltar ao inicio
             carousel.scrollLeft = carousel.offsetWidth;
         }
         
@@ -193,13 +187,11 @@ const infiniteScroll = () => {
         return;
     }
     
-    // Limpa o setTimeout
+    // Limpa o setTimeout para evitar execuções desnecessárias
     clearTimeout(timeOutId);
     // Verifica se o mouse não está sobre o carrossel
     if (!wrapper.matches(":hover")) autoPlay();
-    // Atualiza o card central
     updateActiveCardByScroll();
-    // Atualiza o indicador
     updateIndicators();
 };
 
@@ -216,73 +208,119 @@ carousel.addEventListener("scroll", infiniteScroll);
 wrapper.addEventListener("mouseenter", () => clearTimeout(timeOutId));
 wrapper.addEventListener("mouseleave", autoPlay);
 
-// Novidades
+// Formulário - Seção de Novidades
 
-// Validação do formulário de novidades
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.getElementById('signup-form');
-  if (!form) return; // segurança para não tentar validar se o form não existe
+// Verifica se o DOM foi carregado
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('signup-form');
+    if (!form) return;
 
-  const nameInput = form.elements['name'];
-  const emailInput = form.elements['email'];
-  const meditateInputs = form.elements['meditates'];
-  const formMessage = document.getElementById('form-message');
-  const meditateError = document.getElementById('meditate-error');
+    const nameInput = form.elements['name'];
+    const emailInput = form.elements['email'];
+    const meditateInputs = form.elements['meditates'];
 
-  function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email.trim());
-  }
+    const formMessage = document.getElementById('form-message');
+    const meditateError = document.getElementById('meditate-error');
 
-  function isMeditationSelected() {
-    return [...meditateInputs].some(input => input.checked);
-  }
+    const modalContainer = document.getElementById('alert');
+    const msgModal = document.getElementById('alert-message');
+    const triangleIcon = document.getElementById('triangle-alert');
+    const badgeIcon = document.getElementById('badge-check');
+    const closeBtn = document.querySelector('.close-button');
+    const confirmBtn = document.getElementById('alert-confirm');
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    formMessage.textContent = '';
-    let errors = [];
-
-    // Nome
-    if (!nameInput.value.trim() || nameInput.value.trim().length < 2) {
-      errors.push('Por favor, insira um nome válido com pelo menos 2 caracteres.');
-      nameInput.setAttribute('aria-invalid', 'true');
-    } else {
-      nameInput.removeAttribute('aria-invalid');
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email.trim());
     }
 
-    // Email
-    if (!emailInput.value.trim() || !validateEmail(emailInput.value)) {
-      errors.push('Por favor, insira um email válido.');
-      emailInput.setAttribute('aria-invalid', 'true');
-    } else {
-      emailInput.removeAttribute('aria-invalid');
+    function isMeditationSelected() {
+        return [...meditateInputs].some(input => input.checked);
     }
 
-    // Meditação
-    if (!isMeditationSelected()) {
-      meditateError.style.display = 'block';
-      errors.push('Por favor, selecione se você já medita.');
-    } else {
-      meditateError.style.display = 'none';
+    function exibeModal(message, isSuccess = false) {
+        msgModal.textContent = message;
+        modalContainer.style.display = 'flex';
+
+        triangleIcon.style.display = isSuccess ? 'none' : 'block';
+        badgeIcon.style.display = isSuccess ? 'block' : 'none';
+
+        function fechaModal() {
+            modalContainer.style.display = 'none';
+        }
+
+        confirmBtn.addEventListener('click', fechaModal);
+        closeBtn.addEventListener('click', fechaModal);
+        window.addEventListener('click', event => {
+            if (event.target === modalContainer) fechaModal();
+        });
     }
 
-    // Mostrar erros
-    if (errors.length > 0) {
-      formMessage.style.color = '#a46cff';
-      formMessage.textContent = errors.join(' ');
-      return;
+    function validateInputs() {
+        let valid = true;
+
+        if (!nameInput.value.trim() || nameInput.value.trim().length < 2) {
+            nameInput.setAttribute('aria-invalid', 'true');
+            valid = false;
+        } else {
+            nameInput.removeAttribute('aria-invalid');
+        }
+
+        if (!emailInput.value.trim() || !validateEmail(emailInput.value)) {
+            emailInput.setAttribute('aria-invalid', 'true');
+            valid = false;
+        } else {
+            emailInput.removeAttribute('aria-invalid');
+        }
+
+        if (!isMeditationSelected()) {
+            meditateError.style.display = 'block';
+            valid = false;
+        } else {
+            meditateError.style.display = 'none';
+        }
+
+        return valid;
     }
 
-    // Sucesso
-    formMessage.style.color = '##a46cff';
-    formMessage.textContent = 'Cadastro realizado com sucesso!';
-    console.log('Nome:', nameInput.value.trim());
-    console.log('Email:', emailInput.value.trim());
-    form.reset();
-    meditateError.style.display = 'none';
-  });
+    nameInput.addEventListener('input', () => {
+        if (nameInput.value.trim().length >= 2) {
+            nameInput.removeAttribute('aria-invalid');
+        }
+    });
+
+    emailInput.addEventListener('input', () => {
+        if (validateEmail(emailInput.value)) {
+            emailInput.removeAttribute('aria-invalid');
+        }
+    });
+
+    [...meditateInputs].forEach(radio => {
+        radio.addEventListener('change', () => {
+            meditateError.style.display = 'none';
+        });
+    });
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        formMessage.textContent = '';
+
+        if (!validateInputs()) {
+            exibeModal('Todos os campos devem ser preenchidos corretamente.', false);
+            return;
+        }
+
+        // Simulação de sucesso
+        exibeModal('Cadastro realizado com sucesso!', true);
+        console.log('Nome:', nameInput.value.trim());
+        console.log('Email:', emailInput.value.trim());
+
+        form.reset();
+    });
 });
+
+
+// Não quero que ele fique em loop
 
 const links = document.querySelectorAll(".ul li a");
 links.forEach((link) => {
@@ -328,7 +366,7 @@ window.addEventListener("scroll", () => {
                 } else {
                     header.classList.remove("active");
                 }
-
+                
                 link.classList.add("active");
             } else {
                 link.classList.remove("active");
@@ -336,112 +374,3 @@ window.addEventListener("scroll", () => {
         });
     }
 });
-document.addEventListener('DOMContentLoaded', function() {
-  
-  const sobreSection = document.querySelector('.sobre-banner').closest('section') || 
-                     document.querySelector('.sobre-banner').parentElement;
-  
-  
-  const counterConfigs = [
-    { target: 6, duration: 1000 },
-    { target: 100, duration: 1500 },
-    { target: 10000, duration: 2000 }
-  ];
-  
-  
-  const originalValues = Array.from(document.querySelectorAll('.banner-item h3'))
-    .map(el => el.textContent);
-  
-  
-  function resetCounters() {
-    document.querySelectorAll('.banner-item h3').forEach((counter, index) => {
-      counter.textContent = '0';
-    });
-  }
-  
-  
-  function animateCounters() {
-    const counters = document.querySelectorAll('.banner-item h3');
-    
-    counters.forEach((counter, index) => {
-      const target = parseInt(originalValues[index].replace('+', '')) || counterConfigs[index].target;
-      const duration = counterConfigs[index].duration;
-      
-      animateCounter(counter, target, duration);
-    });
-  }
-  
-  
-  function animateCounter(element, target, duration) {
-    const start = 0;
-    const increment = target / (duration / 16);
-    let current = start;
-    
-    
-    if (element.timer) clearInterval(element.timer);
-    
-    element.timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        clearInterval(element.timer);
-        current = target;
-        element.textContent = Math.floor(current) + '+';
-      } else {
-        element.textContent = Math.floor(current);
-      }
-    }, 16);
-  }
-  
-  
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        
-        animateCounters();
-      } else {
-        
-        resetCounters();
-      }
-    });
-  }, {
-    threshold: 0.5 
-  });
-  
-  
-  if (sobreSection) {
-    observer.observe(sobreSection);
-  }
-  
-  
-  resetCounters();
-});
-let inputs = document.querySelectorAll('form .campo'),
-    paragraphs = document.querySelectorAll('form .alert-msg'),
-    submitButton = document.querySelector('form .btn-submit')
-
-
-const form = document.getElementById('signup-form'),
-    Modalcontainer = document.getElementById('alert'),
-    msgModal = document.getElementById('alert-message'),
-    triangleIcon = document.getElementById('triangle-alert'),
-    badgeIcon = document.getElementById('badge-check'),
-    closeBtn = document.querySelector('.close-button'),
-    confirmBtn = document.getElementById('alert-confirm')
-
-function exibeModal(message) {
-    msgModal.textContent = message
-    Modalcontainer.style.display = 'flex'
-
-    function fechaModal() {
-        Modalcontainer.style.display = 'none'
-    }
-
-    confirmBtn.addEventListener('click', fechaModal)
-    closeBtn.addEventListener('click', fechaModal)
-
-    window.addEventListener('click', event => {
-        if (event.target === Modalcontainer) {
-            fechaModal()
-        }
-    })
-}
