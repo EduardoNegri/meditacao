@@ -283,3 +283,165 @@ document.addEventListener('DOMContentLoaded', function() {
     meditateError.style.display = 'none';
   });
 });
+
+const links = document.querySelectorAll(".ul li a");
+links.forEach((link) => {
+    link.addEventListener("click", () => {
+        links.forEach((link) => {
+            link.classList.remove("active");
+        });
+        link.classList.add("active");
+    });
+});
+
+let currentSectionId = null;
+
+window.addEventListener("scroll", () => {
+    const sections = document.querySelectorAll("section");
+    const links = document.querySelectorAll(".ul li a");
+
+    let newActiveSectionId = null;
+
+    sections.forEach((section) => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        const offsetTrigger = 50;
+
+        if ( window.scrollY >= sectionTop - offsetTrigger &&
+            window.scrollY < sectionTop + sectionHeight - offsetTrigger) {
+            newActiveSectionId = section.id;
+        }
+
+    });
+
+    // Só atualiza se mudou de seção
+    if (newActiveSectionId !== currentSectionId) {
+        currentSectionId = newActiveSectionId;
+
+        links.forEach((link) => {
+            const href = link.getAttribute("href").replace("#", "");
+            const header = document.querySelector("header");
+
+            if (href === currentSectionId) {
+                if (href === "sobre" || href === "depoimentos") {
+                    header.classList.add("active");
+                } else {
+                    header.classList.remove("active");
+                }
+
+                link.classList.add("active");
+            } else {
+                link.classList.remove("active");
+            }
+        });
+    }
+});
+document.addEventListener('DOMContentLoaded', function() {
+  
+  const sobreSection = document.querySelector('.sobre-banner').closest('section') || 
+                     document.querySelector('.sobre-banner').parentElement;
+  
+  
+  const counterConfigs = [
+    { target: 6, duration: 1000 },
+    { target: 100, duration: 1500 },
+    { target: 10000, duration: 2000 }
+  ];
+  
+  
+  const originalValues = Array.from(document.querySelectorAll('.banner-item h3'))
+    .map(el => el.textContent);
+  
+  
+  function resetCounters() {
+    document.querySelectorAll('.banner-item h3').forEach((counter, index) => {
+      counter.textContent = '0';
+    });
+  }
+  
+  
+  function animateCounters() {
+    const counters = document.querySelectorAll('.banner-item h3');
+    
+    counters.forEach((counter, index) => {
+      const target = parseInt(originalValues[index].replace('+', '')) || counterConfigs[index].target;
+      const duration = counterConfigs[index].duration;
+      
+      animateCounter(counter, target, duration);
+    });
+  }
+  
+  
+  function animateCounter(element, target, duration) {
+    const start = 0;
+    const increment = target / (duration / 16);
+    let current = start;
+    
+    
+    if (element.timer) clearInterval(element.timer);
+    
+    element.timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        clearInterval(element.timer);
+        current = target;
+        element.textContent = Math.floor(current) + '+';
+      } else {
+        element.textContent = Math.floor(current);
+      }
+    }, 16);
+  }
+  
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        
+        animateCounters();
+      } else {
+        
+        resetCounters();
+      }
+    });
+  }, {
+    threshold: 0.5 
+  });
+  
+  
+  if (sobreSection) {
+    observer.observe(sobreSection);
+  }
+  
+  
+  resetCounters();
+});
+let inputs = document.querySelectorAll('form .campo'),
+    paragraphs = document.querySelectorAll('form .alert-msg'),
+    submitButton = document.querySelector('form .btn-submit')
+
+
+const form = document.getElementById('signup-form'),
+    Modalcontainer = document.getElementById('alert'),
+    msgModal = document.getElementById('alert-message'),
+    triangleIcon = document.getElementById('triangle-alert'),
+    badgeIcon = document.getElementById('badge-check'),
+    closeBtn = document.querySelector('.close-button'),
+    confirmBtn = document.getElementById('alert-confirm')
+
+function exibeModal(message) {
+    msgModal.textContent = message
+    Modalcontainer.style.display = 'flex'
+
+    function fechaModal() {
+        Modalcontainer.style.display = 'none'
+    }
+
+    confirmBtn.addEventListener('click', fechaModal)
+    closeBtn.addEventListener('click', fechaModal)
+
+    window.addEventListener('click', event => {
+        if (event.target === Modalcontainer) {
+            fechaModal()
+        }
+    })
+}
